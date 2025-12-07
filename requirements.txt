@@ -1,0 +1,13 @@
+# Production dependencies
+pydantic>=2.12.5
+pyfiglet>=1.0.4
+python-dateutil>=2.9.0.post0
+questionary>=2.1.1
+rich>=14.2.0
+textual>=6.7.1
+tinydb>=4.8.2
+typer[all]>=0.20.0
+
+# Development dependencies
+pytest>=9.0.2
+pytest-cov>=7.0.0
