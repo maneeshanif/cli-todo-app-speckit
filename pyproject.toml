@@ -1,0 +1,64 @@
+[project]
+name = "retro-todo"
+version = "0.1.0"
+description = "A mind-blowing retro terminal todo manager with cyberpunk aesthetics"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "maneeshanif" }
+]
+dependencies = [
+    "pydantic>=2.12.5",
+    "pyfiglet>=1.0.4",
+    "python-dateutil>=2.9.0.post0",
+    "questionary>=2.1.1",
+    "rich>=14.2.0",
+    "textual>=6.7.1",
+    "tinydb>=4.8.2",
+    "typer[all]>=0.20.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+]
+
+[project.scripts]
+retro-todo = "retro_todo.app:main"
+todo = "retro_todo.app:main"
+
+[tool.setuptools.packages.find]
+include = ["retro_todo*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--cov=retro_todo",
+    "--cov-report=term-missing",
+    "--cov-fail-under=75",
+    "-v",
+]
+markers = [
+    "us1: User Story 1 - Basic Task Management",
+    "us2: User Story 2 - Task Organization",
+    "us3: User Story 3 - Task Discovery",
+    "us4: User Story 4 - Task Sorting",
+    "us5: User Story 5 - Task Updates and Deletion",
+    "us6: User Story 6 - Due Dates and Reminders",
+    "us7: User Story 7 - Recurring Tasks",
+]
+
+[tool.coverage.run]
+source = ["retro_todo"]
+omit = ["tests/*", "retro_todo/app.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+]
