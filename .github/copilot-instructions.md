@@ -1,8 +1,77 @@
-# Claude Code Rules
+# GitHub Copilot Rules
 
 This file is generated during init for the selected agent.
 
 You are an expert AI assistant specializing in Spec-Driven Development (SDD). Your primary goal is to work with the architext to build products.
+
+---
+
+## 🎯 Agent Hierarchy
+
+This project uses a **layered agent architecture** for maximum code generation quality:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   COPILOT INSTRUCTIONS                       │
+│              (This file - Entry Point)                       │
+│     Defines: SDD workflow, PHR, ADR, execution contract     │
+└─────────────────────────────────────┬───────────────────────┘
+                                      │ delegates to
+                                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      CLAUDE.md                               │
+│              (Project Specification Hub)                     │
+│     Contains: Vision, Features, Tech Stack, UI Specs        │
+│     Location: ./CLAUDE.md                                   │
+└─────────────────────────────────────┬───────────────────────┘
+                                      │ orchestrates
+                                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    SUB-AGENTS                                │
+│              (Specialist Agents)                             │
+│     Location: .claude/agents/*.md                           │
+│                                                              │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐        │
+│  │ setup-agent  │ │data-model-   │ │feature-agent │        │
+│  │              │ │agent         │ │              │        │
+│  └──────────────┘ └──────────────┘ └──────────────┘        │
+│  ┌──────────────┐ ┌──────────────┐                          │
+│  │  ui-agent    │ │ test-agent   │                          │
+│  └──────────────┘ └──────────────┘                          │
+└─────────────────────────────────────┬───────────────────────┘
+                                      │ uses
+                                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      SKILLS                                  │
+│              (Reusable Capabilities)                         │
+│     Location: .claude/skills/*/SKILL.md                     │
+│                                                              │
+│  setup │ dependency │ model │ database │ crud │ search     │
+│  filter │ render │ prompt │ animation                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### How to Use This Architecture
+
+1. **Read CLAUDE.md First** - Contains full project specification
+2. **Invoke Sub-Agents** - Use for specialized tasks:
+   ```
+   > @setup-agent Initialize the project with uv
+   > @data-model-agent Create TodoTask Pydantic model
+   > @feature-agent Implement CRUD operations
+   > @ui-agent Build the retro splash screen
+   > @test-agent Write pytest test suite
+   ```
+3. **Skills Auto-Load** - Sub-agents automatically use their assigned skills
+
+### Quick Reference Prompts
+
+Ready-to-use prompts are available in the root directory:
+- `constitution-prompt.md` → Use with `/sp.constitution`
+- `specification-prompt.md` → Use with `/sp.specify`
+- `plan-prompt.md` → Use with `/sp.plan`
+
+---
 
 ## Task context
 
@@ -208,167 +277,3 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
-
----
-
-# 🎯 Todo CLI App - Phase I Project Specification
-
-**Developer:** maneeshanif  
-**Project:** Retro Terminal Todo Manager  
-**Phase:** I - In-Memory Console App  
-**Due Date:** December 7, 2025  
-
----
-
-## 🎨 Vision Statement
-
-Create a **mind-blowing retro-terminal todo application** combining:
-- 🌈 **Rich UI** with vibrant colors, panels, and tables
-- 🎮 **Multi-page TUI** with game-like navigation using Textual
-- 💾 **JSON persistence** with TinyDB
-- 🎭 **Interactive prompts** with Questionary
-- ⚡ **Fast CLI** powered by Typer
-- 🎪 **ASCII art splash** with Figlet
-- 🤖 **AI-powered architecture** using sub-agents and skills
-
----
-
-## 🏗️ Sub-Agents Architecture
-
-Located in `.claude/agents/`:
-
-| Sub-Agent | Primary Role | Key Libraries | Skills |
-|-----------|--------------|---------------|--------|
-| **setup-agent** | Project initialization, uv dependency management | `uv`, `typer` | setup-skill, dependency-skill |
-| **data-model-agent** | Pydantic models, TinyDB configuration | `pydantic`, `TinyDB` | model-skill, database-skill |
-| **feature-agent** | Core CRUD, search, filter, recurring tasks | `TinyDB`, `datetime` | crud-skill, search-skill, filter-skill |
-| **ui-agent** | Rich rendering, Textual TUI, prompts | `rich`, `textual`, `questionary`, `pyfiglet` | render-skill, prompt-skill, animation-skill |
-| **test-agent** | Testing and quality assurance | `pytest`, `pytest-cov` | test-skill |
-
-### Using Sub-Agents
-
-Sub-agents are invoked automatically based on task context or explicitly:
-```
-> Use the setup-agent to initialize the project structure
-> Use the ui-agent to create the splash screen
-> Use the feature-agent to implement task search
-```
-
----
-
-## 🛠️ Skills Catalog
-
-Located in `.claude/skills/`:
-
-| Skill | Purpose | Key Functionality |
-|-------|---------|-------------------|
-| **setup-skill** | Project structure creation | Directory layout, config files |
-| **dependency-skill** | Package management with uv | Install, add, sync dependencies |
-| **model-skill** | Pydantic v2 data models | TodoTask, Priority, Status enums |
-| **database-skill** | TinyDB operations | CRUD, queries, ID generation |
-| **crud-skill** | Business logic | Create, Read, Update, Delete tasks |
-| **search-skill** | Search functionality | Keyword search, ranking |
-| **filter-skill** | Filtering tasks | By priority, status, tags, dates |
-| **render-skill** | Rich terminal output | Tables, panels, progress bars |
-| **prompt-skill** | Interactive prompts | Forms, selections, confirmations |
-| **animation-skill** | Visual effects | Splash screens, ASCII art |
-
----
-
-## 📋 Feature Requirements
-
-### 🟩 Basic Level (Core Essentials)
-1. **Add Task** - Create tasks with title, description, priority, tags
-2. **Delete Task** - Remove tasks with confirmation
-3. **Update Task** - Modify existing task fields
-4. **View Task List** - Display tasks in Rich table
-5. **Mark as Complete** - Toggle completion status
-
-### 🟦 Intermediate Level (Organization)
-6. **Priorities & Tags** - Low/Medium/High/Urgent priorities, custom tags
-7. **Search & Filter** - Search by keyword, filter by criteria
-8. **Sort Tasks** - Sort by priority, date, title
-
-### 🟥 Advanced Level (Intelligent)
-9. **Recurring Tasks** - Daily, weekly, monthly recurrence
-10. **Due Dates & Reminders** - Due dates, overdue detection
-
----
-
-## 🎨 UI Requirements
-
-### Splash Screen (MUST include developer credit)
-```
-╔══════════════════════════════════════════════════════════╗
-║   ████████╗ ██████╗ ██████╗  ██████╗                    ║
-║   ╚══██╔══╝██╔═══██╗██╔══██╗██╔═══██╗                   ║
-║      ██║   ██║   ██║██║  ██║██║   ██║                   ║
-║      ██║   ╚██████╔╝██████╔╝╚██████╔╝                   ║
-║      ╚═╝    ╚═════╝ ╚═════╝  ╚═════╝                    ║
-║                                                          ║
-║         🎮 Retro Terminal Task Manager 🎮               ║
-║                                                          ║
-║              Developer by: maneeshanif                   ║
-╚══════════════════════════════════════════════════════════╝
-```
-
-### Color Theme (Cyberpunk Retro)
-- Primary: Cyan (#00FFFF)
-- Secondary: Magenta (#FF00FF)
-- Success: Green (#00FF00)
-- Warning: Yellow (#FFFF00)
-- Error: Red (#FF0000)
-
----
-
-## 🔧 Technical Stack
-
-### Dependencies (Install with uv)
-```bash
-uv add typer[all] rich textual pydantic tinydb questionary pyfiglet python-dateutil
-uv add --dev pytest pytest-cov black ruff
-```
-
-### Project Structure
-```
-cli-todo-hackhaton/
-├── CLAUDE.md              # This file
-├── pyproject.toml         # Project config
-├── todo_data.json         # TinyDB storage
-├── retro_todo/            # Main package
-│   ├── __init__.py
-│   ├── main.py            # Typer entry point
-│   ├── models/            # Pydantic models
-│   │   └── todo.py
-│   ├── database/          # TinyDB layer
-│   │   └── db.py
-│   ├── services/          # Business logic
-│   │   └── todo_service.py
-│   └── ui/                # UI components
-│       ├── splash.py
-│       ├── table.py
-│       └── prompts.py
-└── tests/                 # Test suite
-```
-
----
-
-## 🎯 Implementation Order
-
-1. **SetupAgent** → Initialize project with uv
-2. **DataModelAgent** → Create models and database
-3. **FeatureAgent** → Implement CRUD and features
-4. **UIAgent** → Build beautiful interface
-5. **TestAgent** → Write comprehensive tests
-
----
-
-## ✅ Success Criteria
-
-- [ ] All 10 features implemented
-- [ ] Splash screen shows "Developer by: maneeshanif"
-- [ ] Retro game-like visual design
-- [ ] TinyDB persistence working
-- [ ] Tests passing with >80% coverage
-- [ ] Sub-agents and skills properly used
-- [ ] No manual coding - all generated from specs
